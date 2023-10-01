@@ -1,5 +1,5 @@
-# Capital Placement Task 2 (Aplication Form)
-This repository contains the files for Capital Placement Task 2 (Frontend).
+# Capital Placement Task 1 (Aplication Form)
+This repository contains the files for Capital Placement Task 1 (Frontend).
 
 Capital Placement brings together groups of inspiring students and graduates to 
 explore the world through travel, life, and internships abroad.
