@@ -42,4 +42,5 @@ $ npm start
 $ npm run build
 
 ```
-# Note - Server may take a while to respond at first request. App currently uses a free instance.
+# Note 
+**Server may take a while to respond at first request. App currently uses a free instance.**
