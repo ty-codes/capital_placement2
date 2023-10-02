@@ -29,11 +29,21 @@ export interface IQuestion {
   other?: boolean;
   disqualify?: boolean;
   maxChoice?: number;
-  id?: number;
+  id?: string;
   choices?: string[];
   timeType?: string;
   additionalInformation?: string;
   maxTime?: string | number;
+}
+
+export interface IAttributes {
+  id: string;
+  attributes: {
+      coverImage: string;
+      personalInformation: IForm | null;
+      profile: IForm | null;
+      customizedQuestions: [] | IQuestion[];
+  };
 }
 
 export type AppContextType = {
@@ -50,5 +60,10 @@ export type AppContextType = {
   setProfileTypes: React.Dispatch<React.SetStateAction<string[] | []>>,
   customisedTypes: string[] | [];
   setCustomisedTypes: React.Dispatch<React.SetStateAction<string[] | []>>,
-  customizedQuestions?: IQuestion[] | []
+  customizedQuestions?: IQuestion[] | [],
+  imageUri?: string,
+  setImageUri?: React.Dispatch<React.SetStateAction<string>>,
+  attributes?:  IAttributes,
+  submitted?: boolean,
+  setSubmitted?: React.Dispatch<React.SetStateAction<boolean>>
 };
