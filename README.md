@@ -17,11 +17,12 @@ Users can:
 - Add/Remove restrictions on form based on defined types 🟢
 - Upload cover image for form(_Firebase_)🟢
 - Update the information on the form🟢
-- Get form🟢
+- Get/View form🟢
+- Edit form🟢
 
 # Stack
-Frontend - _React_, _Typescript_, _Firebase_
-Backend - _Node.js_, MongoDB
+- Frontend - _React_, _Typescript_, _Firebase_
+- Backend - _Firebase_
 
 # Design
 - [Figma]([https://capitalplacement.netlify.app](https://www.figma.com/file/2AEUzsQeLSF0uwI5vjYa6u/FE-Task-(Community)-(Copy)?type=design&t=X1E6JWncXtuxYFMP-6))
@@ -42,5 +43,5 @@ $ npm start
 $ npm run build
 
 ```
-# Note 
-**Server may take a while to respond at first request. App currently uses a free instance.**
+
+
