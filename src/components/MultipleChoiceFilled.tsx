@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import 'react-toggle/style.css';
 import { ListIcon } from 'assets/svg';
 import { IQuestion } from '../@types/app';
 
 export default function MultipleChoiceFilled({ data, type }: { data?: IQuestion, type?: string }): JSX.Element {
-  const {choices, id, maxChoice, other, question} = data as IQuestion;
+  const { choices, id, maxChoice, other, question } = data as IQuestion;
   const initialValues = {
     Pchoices: choices,
     question: question,
@@ -16,9 +15,7 @@ export default function MultipleChoiceFilled({ data, type }: { data?: IQuestion,
     id: id
   };
 
-  console.log('yup')
-
-  const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
+  const { values } = useFormik({
     initialValues,
     onSubmit: () => {
     },
@@ -26,51 +23,51 @@ export default function MultipleChoiceFilled({ data, type }: { data?: IQuestion,
 
   return (
     <>
-        <Wrapper>
-          <form
+      <Wrapper>
+        <form
           onSubmit={e => e.preventDefault()}
-            className="flex j-space-between align-center"
-          >
+          className="flex j-space-between align-center"
+        >
 
-            <div className="choices align-center">
-              {choices?.map((choice: string, id: number) => (
-                <>
-                  <div className="choice-wrapper flex">
-                    <ListIcon />
-                    <div className='w-100'>
-                      <p className="t-sm">Choice</p>
-                      <input type="text" className='t-sm' disabled defaultValue={choice} readOnly />
-                    </div>
+          <div className="choices align-center">
+            {choices?.map((choice: string, id: number) => (
+              <>
+                <div className="choice-wrapper flex">
+                  <ListIcon />
+                  <div className='w-100'>
+                    <p className="t-sm">Choice</p>
+                    <input type="text" className='t-sm' disabled defaultValue={choice} readOnly />
                   </div>
-                </>
-              ))}
+                </div>
+              </>
+            ))}
+          </div>
+
+          <div className='flex'>
+            <input type='checkbox' checked={values.other} disabled name="other" id="other" />
+            <p className='t-sm'>Enable 'other' option</p>
+          </div>
+
+          <div className="input_wrap">
+            <div>
+              <label className="capitalize t-sm">Max choice allowed</label>
             </div>
 
-            <div className='flex'>
-              <input type='checkbox' checked={values.other} disabled name="other" id="other" />
-              <p className='t-sm'>Enable 'other' option</p>
+            <div className="align-center">
+              <span className="relative">
+                <input
+                  className="t-sm"
+                  id="maxChoice"
+                  type="number"
+                  name="maxChoice"
+                  value={values.maxChoice}
+                  disabled
+                />
+              </span>
             </div>
-
-            <div className="input_wrap">
-              <div>
-                <label className="capitalize t-sm">Max choice allowed</label>
-              </div>
-
-              <div className="align-center">
-                <span className="relative">
-                  <input
-                    className="t-sm"
-                    id="maxChoice"
-                    type="number"
-                    name="maxChoice"
-                    value={values.maxChoice}
-                    disabled
-                  />
-                </span>
-              </div>
-            </div>
-          </form>
-        </Wrapper>
+          </div>
+        </form>
+      </Wrapper>
     </>
   );
 }

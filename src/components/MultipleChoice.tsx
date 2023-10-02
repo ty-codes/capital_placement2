@@ -23,6 +23,7 @@ export default function MultipleChoice({ props, formType }: { props?: IForm, for
     maxChoice: 0,
     id: uuid()
   };
+
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
     maxChoice: Yup.number().max(choices?.length, `Please add more choices`)
@@ -44,7 +45,6 @@ export default function MultipleChoice({ props, formType }: { props?: IForm, for
         const data = {
           ...props, profileQuestions
         }
-        console.log(data)
         setProfile && setProfile(data)
       } else if (formType && formType === 'personal information') {
         setPersonalTypes && setPersonalTypes(current => [...current, values?.type?.toLowerCase()])

@@ -8,7 +8,7 @@ import { AppContextType, IQuestion } from '../@types/app';
 import { useState } from 'react';
 import { EditIcon } from 'assets/svg';
 import { device } from "constants/index";
-import {ParagraphEdit, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit} from 'components';
+import { ParagraphEdit, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit } from 'components';
 
 
 export default function PersonalInformation(): JSX.Element {
@@ -42,24 +42,23 @@ export default function PersonalInformation(): JSX.Element {
     const type: string | undefined = currentType;
 
     if (type === "paragraph") {
-      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "number") {
-      return <NumberEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <NumberEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "short answer") {
-      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "yes/no") {
-      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "dropdown") {
-      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "date") {
-      return <DateEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <DateEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "file upload") {
-      console.log('file upload')
-      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "multiple choice") {
-      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else if (type === "video") {
-      return <VideoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <VideoEdit data={data} setShowQuestion={setShowQuestion} formType="personal information" />
     } else {
       return <></>
     }

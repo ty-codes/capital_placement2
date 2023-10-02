@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Field, FieldArray, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'react-toggle/style.css';
 import { DeleteIcon, ListIcon, PlusIcon } from 'assets/svg';

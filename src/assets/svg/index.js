@@ -15,11 +15,12 @@ import { ReactComponent as MailIcon } from "./mail.svg";
 import { ReactComponent as LikeIcon } from "./like.svg";
 import { ReactComponent as SearchIcon } from "./search.svg";
 import { ReactComponent as WarningIcon } from "./warning.svg";
-
 import { ReactComponent as UploadIcon } from "./upload.svg";
 import { ReactComponent as DeleteIcon } from "./delete.svg";
-
-
+// import { ReactComponent as EditIcon } from "./edit.svg";
+import { ReactComponent as PlusIcon } from "./plus.svg";
+import { ReactComponent as ListIcon } from "./list.svg";
+import {EditOutlined as EditIcon} from "@ant-design/icons"
 
 
 export {
@@ -41,5 +42,8 @@ export {
     SearchIcon,
     WarningIcon,
     UploadIcon,
-    DeleteIcon
+    DeleteIcon,
+    EditIcon,
+    PlusIcon,
+    ListIcon
 }

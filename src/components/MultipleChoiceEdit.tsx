@@ -2,17 +2,15 @@ import styled from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'react-toggle/style.css';
-import { DeleteIcon, ListIcon, PlusIcon } from 'assets/svg';
+import { DeleteIcon, ListIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IQuestion } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
-import uuid from 'react-uuid';
 
-export default function MultipleChoiceEdit({ data, formType, setShowQuestion }: { setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>,data?: IQuestion, formType?: string }
-    ): JSX.Element {
+
+export default function MultipleChoiceEdit({ data, formType, setShowQuestion }: { setShowQuestion: React.Dispatch<React.SetStateAction<boolean>>, data?: IQuestion, formType?: string }
+): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
-  const [choice, setChoice] = useState<string>('');
-  const [choices, setChoices] = useState<string[]>([]);
   const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes, personalInformation, customizedQuestions } = useAppContext() as AppContextType;
 
   const initialValues = {
@@ -34,7 +32,7 @@ export default function MultipleChoiceEdit({ data, formType, setShowQuestion }: 
       let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
       profileQuestions.splice(updateIndex, 1);
       // setProfile && profile && setProfile(profile)
-         setShowQuestion(false);
+      setShowQuestion(false);
     } else if (formType && formType === 'personal information') {
       const personalQuestions = personalInformation?.personalQuestions || [];
       let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
@@ -59,7 +57,7 @@ export default function MultipleChoiceEdit({ data, formType, setShowQuestion }: 
       setShow(false);
 
       const { question, type, other, maxChoice, id } = values;
-      values = { question, type, choices:data?.choices, other, maxChoice, id };
+      values = { question, type, choices: data?.choices, other, maxChoice, id };
       if (formType && formType === 'profile') {
         setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
         const profileQuestions = profile?.profileQuestions || [];
@@ -75,7 +73,7 @@ export default function MultipleChoiceEdit({ data, formType, setShowQuestion }: 
         const customisedQuestions = customizedQuestions || [];
         let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
         customisedQuestions.splice(updateIndex, 1, values);
-      
+
       }
     },
   });

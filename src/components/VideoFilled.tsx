@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import 'react-toggle/style.css';
-import { DeleteIcon } from 'assets/svg';
 import { IQuestion } from '../@types/app';
 
 export default function VideoFilled({ data, type }: { data?: IQuestion, type?: string }): JSX.Element {
-    const {additionalInformation, id, maxTime, timeType,question} = data as IQuestion;
+  const { additionalInformation, id, maxTime, timeType, question } = data as IQuestion;
 
-    const initialValues = {
+  const initialValues = {
     question: question,
     type: 'video',
     additionalInformation: additionalInformation,
@@ -17,7 +15,7 @@ export default function VideoFilled({ data, type }: { data?: IQuestion, type?: s
     id: id
   };
 
-  const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
+  const { values, handleSubmit, handleChange } = useFormik({
     initialValues,
     onSubmit: () => {
     },
@@ -25,58 +23,58 @@ export default function VideoFilled({ data, type }: { data?: IQuestion, type?: s
 
   return (
     <>
-        <Wrapper>
-          <form
-            onSubmit={handleSubmit}
-            className="flex j-space-between align-center"
-          >
+      <Wrapper>
+        <form
+          onSubmit={handleSubmit}
+          className="flex j-space-between align-center"
+        >
+          <div className="input_wrap">
+            <div className="align-center">
+              <span className="relative">
+                <input
+                  className=""
+                  id="additionalInformation"
+                  type="text"
+                  name="additionalInformation"
+                  placeholder="Additional Information"
+                  value={values.additionalInformation}
+                  disabled
+                />
+              </span>
+            </div>
+          </div>
+
+          <div className='input-flex'>
             <div className="input_wrap">
               <div className="align-center">
                 <span className="relative">
                   <input
                     className=""
-                    id="additionalInformation"
+                    id="maxTime"
                     type="text"
-                    name="additionalInformation"
-                    placeholder="Additional Information"
-                    value={values.additionalInformation}
+                    name="maxTime"
+                    placeholder="Max duration of video in (sec/min)"
+                    value={values.maxTime}
                     disabled
                   />
                 </span>
               </div>
             </div>
 
-            <div className='input-flex'>
-              <div className="input_wrap">
-                <div className="align-center">
-                  <span className="relative">
-                    <input
-                      className=""
-                      id="maxTime"
-                      type="text"
-                      name="maxTime"
-                      placeholder="Max duration of video in (sec/min)"
-                      value={values.maxTime}
-                      disabled
-                    />
-                  </span>
-                </div>
-              </div>
-
-              <div className="input_wrap">
-                <select value={values.timeType} disabled name='timeType' onChange={handleChange}>
-                  <option value="" >Select "Seconds" or "Minutes"</option>
-                  <option className="capitalize" value="seconds">
-                    seconds
-                  </option>
-                  <option className="capitalize" value="minutes">
-                    minutes
-                  </option>
-                </select>
-              </div>
+            <div className="input_wrap">
+              <select value={values.timeType} disabled name='timeType' onChange={handleChange}>
+                <option value="" >Select "Seconds" or "Minutes"</option>
+                <option className="capitalize" value="seconds">
+                  seconds
+                </option>
+                <option className="capitalize" value="minutes">
+                  minutes
+                </option>
+              </select>
             </div>
-          </form>
-        </Wrapper>
+          </div>
+        </form>
+      </Wrapper>
     </>
   );
 }

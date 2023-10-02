@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { PlusIcon } from 'assets/svg';
 import 'react-toggle/style.css';
 import { device, questionTypes } from 'constants/index';
-import { Video, Date, Dropdown, FileUpload, MultipleChoice, Number, Paragragh,YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit, ShortAnswer, YesNo, ParagraphEdit } from 'components';
+import { Video, Date, Dropdown, FileUpload, MultipleChoice, Number, Paragragh, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit, ShortAnswer, YesNo, ParagraphEdit } from 'components';
 import { useAppContext } from 'contexts/AppContext';
 import { AppContextType, IQuestion } from '../@types/app';
 import { EditIcon } from 'assets/svg';
@@ -94,10 +94,10 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
     gender: Yup.string().required('Please enter gender'),
   });
 
-  const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
+  const { values } = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: values => {
+    onSubmit: () => {
       // navigate("/");
     },
   });
@@ -108,24 +108,23 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
     const type: string | undefined = currentType;
 
     if (type === "paragraph") {
-      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "number") {
-      return <NumberEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <NumberEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "short answer") {
-      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "yes/no") {
-      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "dropdown") {
-      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "date") {
-      return <DateEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <DateEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "file upload") {
-      console.log('file upload')
-      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "multiple choice") {
-      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} />
     } else if (type === "video") {
-      return <VideoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+      return <VideoEdit data={data} setShowQuestion={setShowQuestion} />
     } else {
       return <></>
     }
@@ -134,7 +133,7 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
   const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
     const [show, setShow] = useState(false);
     const filteredQuestion = customizedQuestions?.filter(question => question.id === id)
-    const [showQuestion, setShowQuestion] = useState<boolean>(true);
+    const [, setShowQuestion] = useState<boolean>(true);
 
     return <>
       <div className='question' key={`question-${key}`}>

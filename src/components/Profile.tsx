@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { EditIcon } from 'assets/svg';
 import Toggle from 'react-toggle';
@@ -8,7 +8,7 @@ import { AdditionalQuestions } from './AdditionalQuestions';
 import { useAppContext } from 'contexts/AppContext';
 import { AppContextType, IQuestion } from '../@types/app';
 import { device } from 'constants/index';
-import {ParagraphEdit, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit} from 'components';
+import { ParagraphEdit, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit } from 'components';
 
 export default function Profile(): JSX.Element {
   const { profile, profileTypes, setProfile } = useAppContext() as AppContextType;
@@ -29,7 +29,7 @@ export default function Profile(): JSX.Element {
   };
 
 
-  const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
+  const { values, handleSubmit, handleChange } = useFormik({
     initialValues,
     onSubmit: values => {
       setProfile && setProfile({ ...values, profileQuestions: [] })
@@ -79,7 +79,7 @@ export default function Profile(): JSX.Element {
 
         </>
       }
-    </> 
+    </>
   }
 
   return (

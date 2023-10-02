@@ -15,9 +15,11 @@ export default function ShortAnswer({ props, formType }: { props?: IForm, formTy
     question: '',
     type: 'short answer'
   };
+
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
   });
+
   const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes,
     setCustomisedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
 

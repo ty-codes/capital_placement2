@@ -12,12 +12,11 @@ import { device } from "constants/index";
 export default function CoverImage(): JSX.Element {
   const [error, setError] = useState<string>('');
   const [imgUrl, setImgUrl] = useState<string | null>(null);
-  const [progresspercent, setProgresspercent] = useState(0);
+  const [, setProgresspercent] = useState(0);
 
-  const {setImageUri} = useAppContext() as AppContextType;
+  const { setImageUri } = useAppContext() as AppContextType;
 
   const handleSubmit = (files: any) => {
-    console.log(files)
     const file = files[0];
 
     if (!file) return;
@@ -42,8 +41,7 @@ export default function CoverImage(): JSX.Element {
     );
   }
 
-  if(imgUrl) {
-    console.log(imgUrl, progresspercent);
+  if (imgUrl) {
     setImageUri && setImageUri(imgUrl);
   }
 
@@ -52,8 +50,8 @@ export default function CoverImage(): JSX.Element {
       <Header>
         <h3>Upload cover image</h3>
       </Header>
-      {imgUrl 
-      ? <img src={imgUrl} alt='uploaded file' className="cover-image" height={200} />
+      {imgUrl
+        ? <img src={imgUrl} alt='uploaded file' className="cover-image" height={200} />
         : <>
           <Form>
             <Dropzone onDrop={(files) => { handleSubmit(files) }}

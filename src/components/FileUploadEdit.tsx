@@ -6,29 +6,25 @@ import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IQuestion } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
-import uuid from 'react-uuid';
 
-export default function FileUploadEdit({ data, formType, setShowQuestion }: { setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>,data?: IQuestion, formType?: string 
+export default function FileUploadEdit({ data, formType, setShowQuestion }: {
+  setShowQuestion: React.Dispatch<React.SetStateAction<boolean>>, data?: IQuestion, formType?: string
 }): JSX.Element {
-  const [show, setShow] = useState<boolean>(true);
-  const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes, customizedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
+  const [show,] = useState<boolean>(true);
+  const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes, customizedQuestions, personalInformation } = useAppContext() as AppContextType;
   const initialValues = {
     question: data?.question,
-    type: 'File Upload',
+    type: 'file upload',
     id: data?.id
   };
 
   const deleteQuestion = () => {
-    console.log('delete');
     if (formType && formType === 'profile') {
       const profileQuestions = profile?.profileQuestions || [];
       let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
       profileQuestions.splice(updateIndex, 1);
       // setProfile && profile && setProfile(profile)
-         setShowQuestion(false);
- 
-      console.log(profile)
-
+      setShowQuestion(false);
     } else if (formType && formType === 'personal information') {
       const personalQuestions = personalInformation?.personalQuestions || [];
       let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
@@ -55,27 +51,22 @@ export default function FileUploadEdit({ data, formType, setShowQuestion }: { se
     initialValues,
     validationSchema,
     onSubmit: values => {
-        if (formType && formType === 'profile') {
-            setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
-            const profileQuestions = profile?.profileQuestions || [];
-            let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
-            profileQuestions.splice(updateIndex, 1, values);
-            console.log(profile)
-          } else if (formType && formType === 'personal information') {
-            setPersonalTypes && setPersonalTypes(current => [...current, values?.type?.toLowerCase()])
-            const personalQuestions = personalInformation?.personalQuestions || [];
-            let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
-            personalQuestions.splice(updateIndex, 1, values);
-          } else {
-            setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
-            const customisedQuestions = customizedQuestions || [];
-            console.log(customisedQuestions)
-            let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
-            console.log(updateIndex)
-            customisedQuestions.splice(updateIndex, 1, values);
-            console.log(customisedQuestions);
-          
-          }
+      if (formType && formType === 'profile') {
+        setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
+        const profileQuestions = profile?.profileQuestions || [];
+        let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
+        profileQuestions.splice(updateIndex, 1, values);
+      } else if (formType && formType === 'personal information') {
+        setPersonalTypes && setPersonalTypes(current => [...current, values?.type?.toLowerCase()])
+        const personalQuestions = personalInformation?.personalQuestions || [];
+        let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
+        personalQuestions.splice(updateIndex, 1, values);
+      } else {
+        setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
+        const customisedQuestions = customizedQuestions || [];
+        let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
+        customisedQuestions.splice(updateIndex, 1, values);
+      }
     },
   });
 

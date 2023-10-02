@@ -9,15 +9,15 @@ import YesNoFilled from './YesNoFilled';
 import VideoFilled from './VideoFilled';
 import { useState } from 'react';
 import { EditIcon } from 'assets/svg';
-import {device} from "constants/index";
- 
+import { device } from "constants/index";
+
 
 export default function PersonalInformationFilled({ data }: { data: IForm }): JSX.Element {
 
     const initialValues = {
         dob: {
             show: false,
-            internalUse:false,
+            internalUse: false,
         },
         id: {
             show: false,
@@ -69,7 +69,7 @@ export default function PersonalInformationFilled({ data }: { data: IForm }): JS
     data?.personalQuestions?.map(el => el?.type && el.type.length > 0 && questionTypes.push(el.type))
 
 
-    const { values, handleSubmit, handleChange, handleBlur, errors } =
+    const { handleSubmit } =
         useFormik({
             initialValues,
             onSubmit: () => {

@@ -1,20 +1,17 @@
 import styled from 'styled-components';
-import { Field, FieldArray, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'react-toggle/style.css';
-import { DeleteIcon, ListIcon, PlusIcon } from 'assets/svg';
+import { DeleteIcon, ListIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IQuestion } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
-import uuid from 'react-uuid';
 
 
-export default function DropdownEdit({ data, formType, setShowQuestion }: { setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>,data?: IQuestion, formType?: string }
-    ): JSX.Element {
+export default function DropdownEdit({ data, formType, setShowQuestion }: { setShowQuestion: React.Dispatch<React.SetStateAction<boolean>>, data?: IQuestion, formType?: string }
+): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
-  const [choice, setChoice] = useState<string>('');
-  const [choices, setChoices] = useState<string[]>([]);
-  const { profile, setCustomisedTypes, setProfileTypes, setPersonalTypes, customizedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
+  const { profile, setCustomisedTypes, setProfileTypes, setPersonalTypes, customizedQuestions, personalInformation } = useAppContext() as AppContextType;
 
   const initialValues = {
     choices: data?.choices,
@@ -33,7 +30,7 @@ export default function DropdownEdit({ data, formType, setShowQuestion }: { setS
       let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
       profileQuestions.splice(updateIndex, 1);
       // setProfile && profile && setProfile(profile)
-         setShowQuestion(false);
+      setShowQuestion(false);
     } else if (formType && formType === 'personal information') {
       const personalQuestions = personalInformation?.personalQuestions || [];
       let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
@@ -56,7 +53,7 @@ export default function DropdownEdit({ data, formType, setShowQuestion }: { setS
     onSubmit: values => {
       setShow(false);
       const { question, type, other, id } = values;
-      values = { question, type, choices:data?.choices, other, id };
+      values = { question, type, choices: data?.choices, other, id };
 
       if (formType && formType === 'profile') {
         setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
@@ -73,7 +70,7 @@ export default function DropdownEdit({ data, formType, setShowQuestion }: { setS
         const customisedQuestions = customizedQuestions || [];
         let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
         customisedQuestions.splice(updateIndex, 1, values);
-      
+
       }
     },
   });

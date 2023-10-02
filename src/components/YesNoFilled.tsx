@@ -4,39 +4,39 @@ import 'react-toggle/style.css';
 import { IQuestion } from '../@types/app';
 
 export default function YesNoFilled({ data, type }: { data?: IQuestion, type?: string }): JSX.Element {
-    const {disqualify, id, question} = data as IQuestion;
-    const initialValues = {
+  const { disqualify, id, question } = data as IQuestion;
+  const initialValues = {
     question: question,
     type: 'yes/no',
     disqualify: disqualify,
     id: id
   };
 
-  const { values, handleChange, handleBlur } = useFormik({
+  const { values, handleChange } = useFormik({
     initialValues,
     onSubmit: () => {
-      
+
     },
   });
 
 
   return (
     <>
-        <Wrapper>
-          <form
-            onSubmit={e => e.preventDefault()}
-            className="flex j-space-between align-center"
-          >
+      <Wrapper>
+        <form
+          onSubmit={e => e.preventDefault()}
+          className="flex j-space-between align-center"
+        >
 
-            <div className='flex'>
-              <input type='checkbox' checked={values.disqualify} disabled onChange={handleChange}
-                name="disqualify"
-                id="disqualify" />
-              <p className='t-sm'>Disqualify candidate if answer is no</p>
-            </div>
+          <div className='flex'>
+            <input type='checkbox' checked={values.disqualify} disabled onChange={handleChange}
+              name="disqualify"
+              id="disqualify" />
+            <p className='t-sm'>Disqualify candidate if answer is no</p>
+          </div>
 
-          </form>
-        </Wrapper>
+        </form>
+      </Wrapper>
     </>
   );
 }

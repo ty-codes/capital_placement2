@@ -14,27 +14,27 @@ export default function TopNav({ isSmallDevice, setIsSideNavOpen }: {
   return (
     <Wrapper id="topNav">
       {isSmallDevice && (
-          <BurgerIcon
-            className="burger"
-            onClick={() => {
-              setIsSideNavOpen(prevState => !prevState);
-            }}
-          /> 
-        )}
+        <BurgerIcon
+          className="burger"
+          onClick={() => {
+            setIsSideNavOpen(prevState => !prevState);
+          }}
+        />
+      )}
       <NavItems image={ActiveLink} className="nav-items">
-          <NavLink to="/">
-            <li className='capitalize'>Program details</li> 
-          </NavLink>
-          <NavLink to="/form">
-            <li className='capitalize'>Application form</li> 
-          </NavLink>
-          <NavLink to="/workflow">
-            <li className='capitalize'>Workflow</li> 
-          </NavLink>
-          <NavLink to="/preview">
-            <li className='capitalize'>Preview</li> 
-          </NavLink>
-        </NavItems>
+        <NavLink to="/">
+          <li className='capitalize'>Program details</li>
+        </NavLink>
+        <NavLink to="/form">
+          <li className='capitalize'>Application form</li>
+        </NavLink>
+        <NavLink to="/workflow">
+          <li className='capitalize'>Workflow</li>
+        </NavLink>
+        <NavLink to="/preview">
+          <li className='capitalize'>Preview</li>
+        </NavLink>
+      </NavItems>
     </Wrapper>
   );
 }
