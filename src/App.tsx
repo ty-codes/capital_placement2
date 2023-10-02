@@ -16,6 +16,7 @@ interface IProps {
 }
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Form = React.lazy(() => import('./pages/Form'));
 
 function App() {
   const theme = useMemo(
@@ -45,6 +46,8 @@ function App() {
           <Routes>
             <Route path="/" element={<PagesWrapper />}>
               <Route index element={<Dashboard />} />
+              <Route path="form" element={<Form />} />
+              <Route path="*" element={<Dashboard />} />
             </Route>
           </Routes>
         </Suspense>
