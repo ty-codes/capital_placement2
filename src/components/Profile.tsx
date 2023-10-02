@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { EditIcon } from 'assets/svg';
 import Toggle from 'react-toggle';
@@ -7,13 +7,12 @@ import 'react-toggle/style.css';
 import { AdditionalQuestions } from './AdditionalQuestions';
 import { useAppContext } from 'contexts/AppContext';
 import { AppContextType, IQuestion } from '../@types/app';
-import MultipleChoiceFilled from './MultipleChoiceFilled';
-import DropdownFilled from './DropdownFilled';
-import YesNoFilled from './YesNoFilled';
-import VideoFilled from './VideoFilled';
 import { device } from 'constants/index';
+import {ParagraphEdit, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit} from 'components';
 
 export default function Profile(): JSX.Element {
+  const { profile, profileTypes, setProfile } = useAppContext() as AppContextType;
+
   const initialValues = {
     education: {
       show: false,
@@ -29,44 +28,58 @@ export default function Profile(): JSX.Element {
     },
   };
 
-  
-
-  const { profile, profileTypes, setProfile } = useAppContext() as AppContextType;
 
   const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
     initialValues,
     onSubmit: values => {
-      setProfile && setProfile({...values, profileQuestions: []})
+      setProfile && setProfile({ ...values, profileQuestions: [] })
     },
   });
-  
-  const ChooseFilledForm = ({ currentType, data }: { currentType: string | undefined, data?: IQuestion}): JSX.Element => {
-    const type:string | undefined = currentType;
-  
-    if (type === "yes/no") {
-      return <YesNoFilled data={data} type={type} />
+
+  const ChooseEditForm = ({ currentType, data, setShowQuestion }: { setShowQuestion: React.Dispatch<React.SetStateAction<boolean>>, currentType: string | undefined, data?: IQuestion }): JSX.Element => {
+    const type: string | undefined = currentType;
+
+    if (type === "paragraph") {
+      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "number") {
+      return <NumberEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "short answer") {
+      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "yes/no") {
+      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else if (type === "dropdown") {
-      return <DropdownFilled data={data} type={type} />
+      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "date") {
+      return <DateEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "file upload") {
+      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else if (type === "multiple choice") {
-      return <MultipleChoiceFilled data={data} type={type} />
-    }  else if (type === "video") {
-      return <VideoFilled data={data} type={type} />
+      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "video") {
+      return <VideoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else {
       return <></>
     }
   };
 
-  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }):JSX.Element => {
+  // setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>
+
+  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
     const [show, setShow] = useState(false);
     const filteredQuestion = profile?.profileQuestions?.filter(question => question.id === id)
-
+    const [showQuestion, setShowQuestion] = useState<boolean>(true);
     return <>
-      <div className='question' key={`question-${key}`}>
-        <p>{question}</p>
-        <EditIcon className='cursor-pointer' onClick={() => {setShow(!show)}} />
-      </div>
-      {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]}  />}
-    </>
+      {showQuestion &&
+        <>
+          <div className='question' key={`question-${key}`}>
+            <p>{question}</p>
+            <EditIcon className='cursor-pointer' onClick={() => { setShow(!show) }} />
+          </div>
+          {show && filteredQuestion && <ChooseEditForm setShowQuestion={setShowQuestion} currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]} />}
+
+        </>
+      }
+    </> 
   }
 
   return (
@@ -175,8 +188,8 @@ export default function Profile(): JSX.Element {
                 <div className='questions'>
                   {
                     profile?.profileQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
-                    .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
-                    )
+                      .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
+                      )
                   }
                 </div>
               )}
@@ -189,6 +202,7 @@ export default function Profile(): JSX.Element {
     </Wrapper>
   );
 }
+
 
 const QuestionTypes = styled.div`
   margin-block: 0.5rem;

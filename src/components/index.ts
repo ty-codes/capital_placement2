@@ -29,6 +29,14 @@ import PersonalInformationFilled from './PersonalInformationFilled';
 import ProfileFilled from './ProfileFilled';
 import AdditionalQuestionsFilled from './AdditionalQuestionsFilled';
 import ParagraphEdit from './ParagraphEdit';
+import DateEdit from './DateEdit';
+import NumberEdit from './NumberEdit';
+import FileUploadEdit from './FileUploadEdit';
+import ShortAnswerEdit from './ShortAnswerEdit';
+import YesNoEdit from './YesNoEdit';
+import DropdownEdit from './DropdownEdit';
+import MultipleChoiceEdit from './MultipleChoiceEdit';
+import VideoEdit from './VideoEdit';
 
 export {
   SideNavbar,
@@ -46,7 +54,7 @@ export {
   Paragragh,
   Number,
   YesNo,
-  Dropdown,
+  Dropdown, 
   MultipleChoice,
   Date,
   FileUpload,
@@ -61,5 +69,13 @@ export {
   PersonalInformationFilled,
   ProfileFilled,
   AdditionalQuestionsFilled,
-  ParagraphEdit
+  ParagraphEdit,
+  DateEdit,
+  NumberEdit,
+  FileUploadEdit,
+  ShortAnswerEdit,
+  YesNoEdit,
+  DropdownEdit,
+  MultipleChoiceEdit,
+  VideoEdit
 }

@@ -5,22 +5,21 @@ import "react-toggle/style.css";
 import { AdditionalQuestions } from "./AdditionalQuestions";
 import { useAppContext } from 'contexts/AppContext';
 import { AppContextType, IQuestion } from '../@types/app';
-import MultipleChoiceFilled from './MultipleChoiceFilled';
-import DropdownFilled from './DropdownFilled';
-import YesNoFilled from './YesNoFilled';
-import VideoFilled from './VideoFilled';
 import { useState } from 'react';
 import { EditIcon } from 'assets/svg';
 import { device } from "constants/index";
+import {ParagraphEdit, YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit} from 'components';
 
 
 export default function PersonalInformation(): JSX.Element {
+  const { personalInformation, setPersonalInformation, personalTypes } = useAppContext() as AppContextType;
+
   const initialValues = {
     dob: {
       show: false,
       internalUse: false,
     },
-    id: { 
+    id: {
       show: false,
       internalUse: false,
     },
@@ -38,45 +37,59 @@ export default function PersonalInformation(): JSX.Element {
     }
   };
 
-  const ChooseFilledForm = ({ currentType, data }: { currentType: string | undefined, data?: IQuestion}): JSX.Element => {
-    const type:string | undefined = currentType;
-  
-    if (type === "yes/no") {
-      return <YesNoFilled data={data} type={type} />
+
+  const ChooseEditForm = ({ currentType, data, setShowQuestion }: { setShowQuestion: React.Dispatch<React.SetStateAction<boolean>>, currentType: string | undefined, data?: IQuestion }): JSX.Element => {
+    const type: string | undefined = currentType;
+
+    if (type === "paragraph") {
+      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "number") {
+      return <NumberEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "short answer") {
+      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "yes/no") {
+      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else if (type === "dropdown") {
-      return <DropdownFilled data={data} type={type} />
+      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "date") {
+      return <DateEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "file upload") {
+      console.log('file upload')
+      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else if (type === "multiple choice") {
-      return <MultipleChoiceFilled data={data} type={type} />
-    }  else if (type === "video") {
-      return <VideoFilled data={data} type={type} />
+      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "video") {
+      return <VideoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else {
       return <></>
     }
   };
 
-  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }):JSX.Element => {
+  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
     const [show, setShow] = useState(false);
     const filteredQuestion = personalInformation?.personalQuestions?.filter(question => question.id === id)
+    const [showQuestion, setShowQuestion] = useState<boolean>(true);
 
     return <>
-      <div className='question' key={`question-${key}`}>
-        <p>{question}</p>
-        <EditIcon className='cursor-pointer' onClick={() => {setShow(!show)}} />
-      </div>
-      {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]}  />}
+      {
+        showQuestion &&
+        <>
+          <div className='question' key={`question-${key}`}>
+            <p>{question}</p>
+            <EditIcon className='cursor-pointer' onClick={() => { setShow(!show) }} />
+          </div>
+          {show && filteredQuestion && <ChooseEditForm setShowQuestion={setShowQuestion} currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]} />}
+
+        </>
+      }
     </>
   }
 
-  
-
-    const { personalInformation, setPersonalInformation, personalTypes } = useAppContext() as AppContextType;
-
-
-const { values, handleSubmit, handleChange, handleBlur, errors } =
+  const { values, handleSubmit, handleChange } =
     useFormik({
       initialValues,
       onSubmit: (values) => {
-        setPersonalInformation && setPersonalInformation({...values, personalQuestions: []})
+        setPersonalInformation && setPersonalInformation({ ...values, personalQuestions: [] })
       }
     });
 
@@ -204,9 +217,9 @@ const { values, handleSubmit, handleChange, handleBlur, errors } =
 
             </div>
           </div>
-          
+
           {personalTypes && personalTypes?.length < 1 && <button type="submit">Save</button>}
-     
+
         </form>
 
         <QuestionTypes>
@@ -220,13 +233,12 @@ const { values, handleSubmit, handleChange, handleBlur, errors } =
                 <div className='questions'>
                   {
                     personalInformation?.personalQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
-                    .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
-                    )
+                      .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
+                      )
                   }
                 </div>
               )}
-            </>
-          ))}
+            </>))}
         </QuestionTypes>
 
         <AdditionalQuestions props={values} formType={'personal information'} />

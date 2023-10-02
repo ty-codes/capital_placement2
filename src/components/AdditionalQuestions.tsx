@@ -5,14 +5,11 @@ import * as Yup from 'yup';
 import { PlusIcon } from 'assets/svg';
 import 'react-toggle/style.css';
 import { device, questionTypes } from 'constants/index';
-import { Video, Date, Dropdown, FileUpload, MultipleChoice, Number, Paragragh, ShortAnswer, YesNo } from 'components';
+import { Video, Date, Dropdown, FileUpload, MultipleChoice, Number, Paragragh,YesNoEdit, VideoEdit, ShortAnswerEdit, NumberEdit, DropdownEdit, DateEdit, FileUploadEdit, MultipleChoiceEdit, ShortAnswer, YesNo, ParagraphEdit } from 'components';
 import { useAppContext } from 'contexts/AppContext';
 import { AppContextType, IQuestion } from '../@types/app';
-import MultipleChoiceFilled from './MultipleChoiceFilled';
-import DropdownFilled from './DropdownFilled';
-import YesNoFilled from './YesNoFilled';
-import VideoFilled from './VideoFilled';
 import { EditIcon } from 'assets/svg';
+
 
 const ChooseQuestion = ({ currentType, props, formType }: { currentType: string, props?: IForm, formType?: string }): JSX.Element => {
   const type = currentType;
@@ -101,43 +98,52 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
     initialValues,
     validationSchema,
     onSubmit: values => {
-      console.log(values);
       // navigate("/");
     },
   });
 
-  
-  
-  const ChooseFilledForm = ({ currentType, data }: { currentType: string | undefined, data?: IQuestion}): JSX.Element => {
-    const type:string | undefined = currentType;
-    console.log(type)
-  
-    if (type === "yes/no") {
-      return <YesNoFilled data={data} type={type} />
+
+
+  const ChooseEditForm = ({ currentType, data, setShowQuestion }: { setShowQuestion: React.Dispatch<React.SetStateAction<boolean>>, currentType: string | undefined, data?: IQuestion }): JSX.Element => {
+    const type: string | undefined = currentType;
+
+    if (type === "paragraph") {
+      return <ParagraphEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "number") {
+      return <NumberEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "short answer") {
+      return <ShortAnswerEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "yes/no") {
+      return <YesNoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else if (type === "dropdown") {
-      return <DropdownFilled data={data} type={type} />
+      return <DropdownEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "date") {
+      return <DateEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "file upload") {
+      console.log('file upload')
+      return <FileUploadEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else if (type === "multiple choice") {
-      return <MultipleChoiceFilled data={data} type={type} />
-    }  else if (type === "video") {
-      return <VideoFilled data={data} type={type} />
+      return <MultipleChoiceEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
+    } else if (type === "video") {
+      return <VideoEdit data={data} setShowQuestion={setShowQuestion} formType="profile" />
     } else {
       return <></>
     }
   };
 
-  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }):JSX.Element => {
+  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
     const [show, setShow] = useState(false);
     const filteredQuestion = customizedQuestions?.filter(question => question.id === id)
+    const [showQuestion, setShowQuestion] = useState<boolean>(true);
 
     return <>
       <div className='question' key={`question-${key}`}>
         <p>{question}</p>
-        <EditIcon className='cursor-pointer' onClick={() => {console.log('click');setShow(!show)}} />
+        <EditIcon className='cursor-pointer' onClick={() => { setShow(!show) }} />
       </div>
-      {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]}  />}
+      {show && filteredQuestion && <ChooseEditForm setShowQuestion={setShowQuestion} currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]} />}
     </>
   }
-
 
   return (
     <Wrapper>
@@ -147,7 +153,7 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
 
 
       <Form>
-      <QuestionTypes>
+        <QuestionTypes>
           {customisedTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
             <>
               <p className='question-type capitalize text_light'>
@@ -158,13 +164,12 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
                 <div className='questions'>
                   {
                     customizedQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
-                    .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
-                    )
+                      .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
+                      )
                   }
                 </div>
               )}
-            </>
-          ))}
+            </>))}
         </QuestionTypes>
         <AdditionalQuestions />
       </Form>

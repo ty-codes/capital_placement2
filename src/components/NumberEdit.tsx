@@ -4,47 +4,78 @@ import * as Yup from 'yup';
 import 'react-toggle/style.css';
 import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
-import { AppContextType, IForm } from '../@types/app';
+import { AppContextType, IQuestion } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
 import uuid from 'react-uuid';
 
-export default function FileUpload({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
+
+export default function NumberEdit({ data, formType, setShowQuestion }: { setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>,data?: IQuestion, formType?: string }
+): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
-  const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes, setCustomisedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
+  const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes,
+    setCustomisedQuestions, customizedQuestions, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
   const initialValues = {
-    question: '',
-    type: 'file upload',
-    id: uuid()
+    question: data?.question,
+    type: 'number',
+    id: data?.id
   };
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
   });
 
+  
+  const deleteQuestion = () => {
+    console.log('delete');
+    if (formType && formType === 'profile') {
+      const profileQuestions = profile?.profileQuestions || [];
+      let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
+      profileQuestions.splice(updateIndex, 1);
+      // setProfile && profile && setProfile(profile)
+         setShowQuestion(false);
+ 
+      console.log(profile)
+
+    } else if (formType && formType === 'personal information') {
+      const personalQuestions = personalInformation?.personalQuestions || [];
+      let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
+      personalQuestions.splice(updateIndex, 1);
+      setShowQuestion(false);
+
+    } else {
+      setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
+      const customisedQuestions = customizedQuestions || [];
+      let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
+      customisedQuestions.splice(updateIndex, 1);
+      setShowQuestion(false);
+
+    }
+  }
+
+
   const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: values => {
-      setShow(false);
-
       if (formType && formType === 'profile') {
         setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
         const profileQuestions = profile?.profileQuestions || [];
-        profileQuestions.push(values)
-        const data = {
-          ...props, profileQuestions
-        }
-        setProfile && setProfile(data)
+        let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
+        profileQuestions.splice(updateIndex, 1, values);
+        console.log(profile)
       } else if (formType && formType === 'personal information') {
         setPersonalTypes && setPersonalTypes(current => [...current, values?.type?.toLowerCase()])
         const personalQuestions = personalInformation?.personalQuestions || [];
-        personalQuestions.push(values)
-        const data = {
-          ...props, personalQuestions
-        }
-        setPersonalInformation && setPersonalInformation(data)
+        let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
+        personalQuestions.splice(updateIndex, 1, values);
       } else {
         setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
-        setCustomisedQuestions && setCustomisedQuestions(current => [...current, values])
+        const customisedQuestions = customizedQuestions || [];
+        console.log(customisedQuestions)
+        let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
+        console.log(updateIndex)
+        customisedQuestions.splice(updateIndex, 1, values);
+        console.log(customisedQuestions);
+      
       }
     },
   });
@@ -84,11 +115,9 @@ export default function FileUpload({ props, formType }: { props?: IForm, formTyp
               <div className="flex align-center cursor-pointer">
                 <DeleteIcon
                   className="delete-icon"
-                  onClick={() => setShow(false)}
+                  onClick={() => deleteQuestion()}
                 />
-                <p className="input-error text_semibold t-sm">
-                  Delete question
-                </p>
+                <p className="input-error text_semibold t-sm">Delete question</p>
               </div>
               <button type="submit" className="t-sm">
                 Save
@@ -104,7 +133,7 @@ export default function FileUpload({ props, formType }: { props?: IForm, formTyp
 const Wrapper = styled.div`
   width: 100%;
   
-  form {
+   form {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -112,7 +141,7 @@ const Wrapper = styled.div`
     margin-block: 1rem;
 
     label {
-      font-family: PoppinsSemiBold;
+      font-family: PoppinsSemiBold;  
     }
 
     .input_wrap {
@@ -130,7 +159,7 @@ const Wrapper = styled.div`
     }
 
     .input-error {
-      color: ${props => props.theme.red};
+      color: ${props => props.theme.red}
     }
 
     .flex {
@@ -149,10 +178,10 @@ const Wrapper = styled.div`
       justify-content: center;
       background: #087b2f;
     }
-  }
+   }
 
-  .delete-icon {
+   .delete-icon {
     width: 1rem;
     height: 1rem;
-  }
+   }
 `;

@@ -7,33 +7,79 @@ import { useState } from 'react';
 import { AppContextType, IForm, IQuestion } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
 import uuid from 'react-uuid';
-
-export default function ParagraphEdit({ data, type, qns }: { qns?: IForm | null | undefined, data?: IQuestion, type?: string }): JSX.Element {
+// { data, formType, setShowQuestion }: { setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>,data?: IQuestion, formType?: string }
+export default function ParagraphEdit({ data, formType, setShowQuestion }: { setShowQuestion:React.Dispatch<React.SetStateAction<boolean>>,data?: IQuestion, formType?: string }): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
-  console.log(data, type, qns)
+  console.log(data, formType)
   const initialValues = {
     question: data?.question,
     type: 'paragraph',
     id: data?.id
   };
-
+ 
   const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes,
-    setCustomisedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
+    setCustomisedQuestions, setProfile, customizedQuestions, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
 
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
   });
 
+  const deleteQuestion = () => {
+    console.log('delete');
+    if (formType && formType === 'profile') {
+      const profileQuestions = profile?.profileQuestions || [];
+      let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
+      profileQuestions.splice(updateIndex, 1);
+      // setProfile && profile && setProfile(profile)
+         setShowQuestion(false);
+ 
+      console.log(profile)
+
+    } else if (formType && formType === 'personal information') {
+      const personalQuestions = personalInformation?.personalQuestions || [];
+      let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
+      personalQuestions.splice(updateIndex, 1);
+      setShowQuestion(false);
+
+    } else {
+      setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
+      const customisedQuestions = customizedQuestions || [];
+      let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
+      customisedQuestions.splice(updateIndex, 1);
+      setShowQuestion(false);
+
+    }
+  }
+
   const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: values => {
-    //   setShow(false);
-
+    console.log(values);
+    if (formType && formType === 'profile') {
+      setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
+      const profileQuestions = profile?.profileQuestions || [];
+      let updateIndex = profileQuestions?.findIndex(el => el.id === data?.id);
+      profileQuestions.splice(updateIndex, 1, values);
+      console.log(profile)
+    } else if (formType && formType === 'personal information') {
+      setPersonalTypes && setPersonalTypes(current => [...current, values?.type?.toLowerCase()])
+      const personalQuestions = personalInformation?.personalQuestions || [];
+      let updateIndex = personalQuestions?.findIndex(el => el.id === data?.id);
+      personalQuestions.splice(updateIndex, 1, values);
+    } else {
+      setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
+      const customisedQuestions = customizedQuestions || [];
+      console.log(customisedQuestions)
+      let updateIndex = customisedQuestions?.findIndex(el => el.id === data?.id);
+      console.log(updateIndex)
+      customisedQuestions.splice(updateIndex, 1, values);
+      console.log(customisedQuestions);
     
+    }
     },
   });
-
+ 
   return (
     <>
       {show && (
@@ -69,7 +115,7 @@ export default function ParagraphEdit({ data, type, qns }: { qns?: IForm | null 
               <div className="flex align-center cursor-pointer">
                 <DeleteIcon
                   className="delete-icon"
-                  onClick={() => setShow(false)}
+                  onClick={() => deleteQuestion()}
                 />
                 <p className="input-error text_semibold t-sm">
                   Delete question

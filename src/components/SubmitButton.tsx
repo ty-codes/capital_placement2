@@ -14,7 +14,7 @@ export default function SubmitButton(): JSX.Element {
     const writeData = () => {
         try {
             const db = getDatabase();
-            set(ref(db, 'form/' + '560cdd979f73'), {
+            set(ref(db, 'form/' + process.env.REACT_APP_FORM_ID), {
                 id: attributes?.id,
                 attributes
             });
