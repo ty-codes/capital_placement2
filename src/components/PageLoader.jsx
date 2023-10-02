@@ -30,7 +30,7 @@ const Loader = styled.div`
 		height: 1rem;
 		margin: 3px 6px;
 		border-radius: 50%;
-		background-color: ${props => props.theme.primaryColor};
+		background-color: rgb(208, 247, 250);
 		opacity: 1;
 		animation: ${bouncingLoader} 0.8s infinite alternate;
 	}

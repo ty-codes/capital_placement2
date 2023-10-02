@@ -4,20 +4,22 @@ import * as Yup from 'yup';
 import 'react-toggle/style.css';
 import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
-import { AppContextType, IForm } from '../@types/app';
+import { AppContextType, IForm, IQuestion } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
 import uuid from 'react-uuid';
 
-
-export default function Date({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
+export default function ParagraphEdit({ data, type, qns }: { qns?: IForm | null | undefined, data?: IQuestion, type?: string }): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
-  const { profile, setCustomisedTypes, setPersonalTypes, setProfileTypes, setCustomisedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
-
+  console.log(data, type, qns)
   const initialValues = {
-    id: uuid(),
-    question: '',
-    type: 'date',
+    question: data?.question,
+    type: 'paragraph',
+    id: data?.id
   };
+
+  const { profile, setPersonalTypes, setCustomisedTypes, setProfileTypes,
+    setCustomisedQuestions, setProfile, personalInformation, setPersonalInformation } = useAppContext() as AppContextType;
+
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
   });
@@ -26,27 +28,9 @@ export default function Date({ props, formType }: { props?: IForm, formType?: st
     initialValues,
     validationSchema,
     onSubmit: values => {
-      setShow(false);
-      if (formType && formType === 'profile') {
-        setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
-        const profileQuestions = profile?.profileQuestions || [];
-        profileQuestions.push(values)
-        const data = {
-          ...props, profileQuestions
-        }
-        setProfile && setProfile(data)
-      } else if (formType && formType === 'personal information') {
-        setPersonalTypes && setPersonalTypes(current => [...current, values?.type?.toLowerCase()])
-        const personalQuestions = personalInformation?.personalQuestions || [];
-        personalQuestions.push(values);
-        const data = {
-          ...props, personalQuestions
-        }
-        setPersonalInformation && setPersonalInformation(data)
-      } else {
-        setCustomisedTypes && setCustomisedTypes(current => [...current, values?.type?.toLowerCase()])
-        setCustomisedQuestions && setCustomisedQuestions(current => [...current, values])
-      }
+    //   setShow(false);
+
+    
     },
   });
 

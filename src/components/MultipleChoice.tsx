@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'react-toggle/style.css';
-import { DeleteIcon, FileIcon, LikeIcon } from 'assets/svg';
+import { DeleteIcon, ListIcon, PlusIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IForm } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
+import uuid from 'react-uuid';
 
 export default function MultipleChoice({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
@@ -19,7 +20,8 @@ export default function MultipleChoice({ props, formType }: { props?: IForm, for
     question: '',
     type: 'multiple choice',
     other: false,
-    maxChoice: 0
+    maxChoice: 0,
+    id: uuid()
   };
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
@@ -32,8 +34,8 @@ export default function MultipleChoice({ props, formType }: { props?: IForm, for
     onSubmit: values => {
       setShow(false);
 
-      const { question, type, other, maxChoice } = values;
-      values = { question, type, choices, other, maxChoice };
+      const { question, type, other, maxChoice, id } = values;
+      values = { question, type, choices, other, maxChoice, id };
       if (formType && formType === 'profile') {
         setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
 
@@ -95,7 +97,7 @@ export default function MultipleChoice({ props, formType }: { props?: IForm, for
               {choices?.map((choice: string, id: number) => (
                 <>
                   <div className="choice-wrapper flex">
-                    <FileIcon />
+                    <ListIcon />
                     <div className='w-100'>
                       <p className="t-sm">Choice</p>
                       <input type="text" className='t-sm' defaultValue={choice} readOnly />
@@ -106,12 +108,12 @@ export default function MultipleChoice({ props, formType }: { props?: IForm, for
               {
                 <>
                   <div className="choice-wrapper flex">
-                    <FileIcon />
+                    <ListIcon />
                     <div className='w-100'>
                       <p className="t-sm">Choice</p>
                       <input type="text" value={choice} onChange={e => setChoice(e.target.value)} />
                     </div>
-                    <LikeIcon
+                    <PlusIcon
                       onClick={() => {
                         setChoices([...choices, choice]);
                         setChoice('');

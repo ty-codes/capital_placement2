@@ -6,6 +6,7 @@ import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IForm } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
+import uuid from 'react-uuid';
 
 
 export default function Number({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
@@ -15,6 +16,7 @@ export default function Number({ props, formType }: { props?: IForm, formType?: 
   const initialValues = {
     question: '',
     type: 'number',
+    id: uuid()
   };
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),

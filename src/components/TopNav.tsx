@@ -3,7 +3,8 @@ import {
 } from 'assets/svg';
 import styled from 'styled-components';
 import { device } from 'constants/index';
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import ActiveLink from "assets/activelink.png";
 
 
 export default function TopNav({ isSmallDevice, setIsSideNavOpen }: {
@@ -18,24 +19,28 @@ export default function TopNav({ isSmallDevice, setIsSideNavOpen }: {
             onClick={() => {
               setIsSideNavOpen(prevState => !prevState);
             }}
-          />
+          /> 
         )}
-      <NavItems className="nav-items">
-          <NavLink to="program-details">
+      <NavItems image={ActiveLink} className="nav-items">
+          <NavLink to="/">
             <li className='capitalize'>Program details</li> 
           </NavLink>
-          <NavLink to="/">
+          <NavLink to="/form">
             <li className='capitalize'>Application form</li> 
           </NavLink>
-          <NavLink to="workflow">
+          <NavLink to="/workflow">
             <li className='capitalize'>Workflow</li> 
           </NavLink>
-          <NavLink to="preview">
+          <NavLink to="/preview">
             <li className='capitalize'>Preview</li> 
           </NavLink>
         </NavItems>
     </Wrapper>
   );
+}
+
+interface IImage {
+  image?: string
 }
 
 const Wrapper = styled.nav`
@@ -58,7 +63,7 @@ const Wrapper = styled.nav`
 
   @media ${device.isSmallDevice} {
     width: 100%;
-    padding-inline: 0.65rem;
+    padding-left: 0.65rem;
     gap: 0.5rem;
   }
 
@@ -71,7 +76,7 @@ const Wrapper = styled.nav`
   }
 `;
 
-const NavItems = styled.ul`
+const NavItems = styled.ul<IImage>`
   margin-block: 3rem;
   padding: 0;
   display: flex;
@@ -81,6 +86,10 @@ const NavItems = styled.ul`
   height: 4rem;
   overflow-x: auto;
 
+  @media ${device.isSmallDevice} {
+    margin-block: 1rem;
+  }
+
   a {
     text-decoration: none;
     color: inherit;
@@ -89,9 +98,13 @@ const NavItems = styled.ul`
     align-items: center;
 
     &.active {
-      background-color: #00635b;
+      background-image: url(${props => props.image});
+      background-color: £00635b;
       color: #fff;
-    }
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      }
   }
 
   li,

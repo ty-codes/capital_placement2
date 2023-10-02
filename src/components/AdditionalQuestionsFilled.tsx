@@ -1,18 +1,16 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { PlusIcon } from 'assets/svg';
 import 'react-toggle/style.css';
-import { device, questionTypes } from 'constants/index';
 import { Video, Date, Dropdown, FileUpload, MultipleChoice, Number, Paragragh, ShortAnswer, YesNo } from 'components';
 import { useAppContext } from 'contexts/AppContext';
-import { AppContextType, IQuestion } from '../@types/app';
+import { AppContextType, IQuestion, IForm } from '../@types/app';
 import MultipleChoiceFilled from './MultipleChoiceFilled';
 import DropdownFilled from './DropdownFilled';
 import YesNoFilled from './YesNoFilled';
 import VideoFilled from './VideoFilled';
 import { EditIcon } from 'assets/svg';
+import { device } from 'constants/index';
 
 const ChooseQuestion = ({ currentType, props, formType }: { currentType: string, props?: IForm, formType?: string }): JSX.Element => {
   const type = currentType;
@@ -46,71 +44,25 @@ interface IObject {
   internalUse?: boolean
 }
 
-interface IForm {
-  education?: IObject,
-  experience?: IObject,
-  resume?: IObject,
-  dob?: IObject,
-  id?: IObject,
-  nationality?: IObject,
-  phone?: IObject,
-  residence?: IObject,
-}
 
-
-export default function AdditionalQuestionsWrapper(): JSX.Element {
+export default function AdditionalQuestionsFilled({ data }: { data: IQuestion[] }): JSX.Element {
   const { customisedTypes, customizedQuestions } = useAppContext() as AppContextType;
 
   const initialValues = {
-    firstName: '',
-    lastName: '',
-    emailId: '',
-    phoneNumber: '',
-    nationality: '',
-    currentResidence: '',
-    idNumber: '',
-    dateOfBirth: '',
-    gender: '',
-    hideDob: true,
-    dobIU: false,
-    hideId: true,
-    idIU: false,
-    hideResidence: true,
-    residenceIU: false,
-    hideNationality: true,
-    nationalityIU: false,
-    hidePhone: true,
-    phoneIU: false,
   };
 
-  const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('Please enter first name'),
-    lastName: Yup.string().required('Please enter last name'),
-    emailId: Yup.string()
-      .email('Please enter a valid email')
-      .required('Please enter email'),
-    phoneNumber: Yup.number().required('Please enter phone number'),
-    nationality: Yup.string().required('Please enter nationality'),
-    currentResidence: Yup.string().required('Please enter residence'),
-    idNumber: Yup.number().required('Please enter id'),
-    dateOfBirth: Yup.string().required('Please enter start date'),
-    gender: Yup.string().required('Please enter gender'),
-  });
-
-  const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
+  const { } = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: values => {
-      console.log(values);
-      // navigate("/");
+    onSubmit: () => {
     },
   });
 
-  
+  const questionTypes: string[] = [];
+  data?.map(el => el?.type && el.type.length > 0 && questionTypes.push(el.type))
+
   
   const ChooseFilledForm = ({ currentType, data }: { currentType: string | undefined, data?: IQuestion}): JSX.Element => {
     const type:string | undefined = currentType;
-    console.log(type)
   
     if (type === "yes/no") {
       return <YesNoFilled data={data} type={type} />
@@ -127,12 +79,12 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
 
   const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }):JSX.Element => {
     const [show, setShow] = useState(false);
-    const filteredQuestion = customizedQuestions?.filter(question => question.id === id)
+    const filteredQuestion = data?.filter(question => question.id === id)
 
     return <>
       <div className='question' key={`question-${key}`}>
         <p>{question}</p>
-        <EditIcon className='cursor-pointer' onClick={() => {console.log('click');setShow(!show)}} />
+        <EditIcon className='cursor-pointer' onClick={() => {setShow(!show)}} />
       </div>
       {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]}  />}
     </>
@@ -148,61 +100,29 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
 
       <Form>
       <QuestionTypes>
-          {customisedTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
-            <>
+          {questionTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
+            <span key={`type-${id}`}>
               <p className='question-type capitalize text_light'>
                 {question}
               </p>
 
-              {customizedQuestions && (
+              {data && (
                 <div className='questions'>
                   {
-                    customizedQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
+                    data?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
                     .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
                     )
                   }
                 </div>
               )}
-            </>
+            </span>
           ))}
         </QuestionTypes>
-        <AdditionalQuestions />
       </Form>
     </Wrapper>
   );
 }
 
-export const AdditionalQuestions = ({ props, formType }: { props?: IForm, formType?: string }): JSX.Element => {
-  const [show, setShow] = useState<boolean>(false);
-  const [currentType, setCurrentType] = useState<string>('');
-
-
-  return (
-    <>
-
-      {show && (
-        <>
-          <select value={currentType} className='t-sm' onChange={(e) => { setCurrentType(e.target.value); }}>
-            <option value=""></option>
-            {questionTypes.map((question: string, id: number) => (
-              <option key={`question-type-${id}`} className="capitalize t-sm">
-                {question}
-              </option>
-            ))}
-          </select>
-        </>
-
-      )}
-      <></>
-      {currentType && <ChooseQuestion currentType={currentType} props={props} formType={formType} />}
-
-      <div className="add-questions mt-05 flex cursor-pointer align-center">
-        <PlusIcon />
-        <p onClick={() => setShow(true)}>Add question</p>
-      </div>
-    </>
-  )
-};
 
 const QuestionTypes = styled.div`
   margin-block: 0.5rem;

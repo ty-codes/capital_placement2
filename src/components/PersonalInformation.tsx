@@ -1,13 +1,17 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { LikeIcon } from "assets/svg";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 import { AdditionalQuestions } from "./AdditionalQuestions";
 import { useAppContext } from 'contexts/AppContext';
-import { AppContextType } from '../@types/app';
+import { AppContextType, IQuestion } from '../@types/app';
+import MultipleChoiceFilled from './MultipleChoiceFilled';
+import DropdownFilled from './DropdownFilled';
+import YesNoFilled from './YesNoFilled';
+import VideoFilled from './VideoFilled';
+import { useState } from 'react';
+import { EditIcon } from 'assets/svg';
+import { device } from "constants/index";
 
 
 export default function PersonalInformation(): JSX.Element {
@@ -16,7 +20,7 @@ export default function PersonalInformation(): JSX.Element {
       show: false,
       internalUse: false,
     },
-    id: {
+    id: { 
       show: false,
       internalUse: false,
     },
@@ -34,19 +38,47 @@ export default function PersonalInformation(): JSX.Element {
     }
   };
 
+  const ChooseFilledForm = ({ currentType, data }: { currentType: string | undefined, data?: IQuestion}): JSX.Element => {
+    const type:string | undefined = currentType;
+  
+    if (type === "yes/no") {
+      return <YesNoFilled data={data} type={type} />
+    } else if (type === "dropdown") {
+      return <DropdownFilled data={data} type={type} />
+    } else if (type === "multiple choice") {
+      return <MultipleChoiceFilled data={data} type={type} />
+    }  else if (type === "video") {
+      return <VideoFilled data={data} type={type} />
+    } else {
+      return <></>
+    }
+  };
+
+  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }):JSX.Element => {
+    const [show, setShow] = useState(false);
+    const filteredQuestion = personalInformation?.personalQuestions?.filter(question => question.id === id)
+
+    return <>
+      <div className='question' key={`question-${key}`}>
+        <p>{question}</p>
+        <EditIcon className='cursor-pointer' onClick={() => {setShow(!show)}} />
+      </div>
+      {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]}  />}
+    </>
+  }
+
+  
+
+    const { personalInformation, setPersonalInformation, personalTypes } = useAppContext() as AppContextType;
 
 
-  const { values, handleSubmit, handleChange, handleBlur, errors } =
+const { values, handleSubmit, handleChange, handleBlur, errors } =
     useFormik({
       initialValues,
       onSubmit: (values) => {
-        console.log(values)
-        // navigate("/");
+        setPersonalInformation && setPersonalInformation({...values, personalQuestions: []})
       }
     });
-
-    const { personalInformation, personalTypes } = useAppContext() as AppContextType;
-
 
   return (
     <Wrapper>
@@ -173,23 +205,23 @@ export default function PersonalInformation(): JSX.Element {
             </div>
           </div>
           
+          {personalTypes && personalTypes?.length < 1 && <button type="submit">Save</button>}
+     
         </form>
 
         <QuestionTypes>
-          {personalTypes?.map((question: string, id: number) => (
+          {personalTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
             <>
               <p className='question-type capitalize text_light'>
                 {question}
               </p>
 
-              {personalInformation?.profileQuestions && (
+              {personalInformation?.personalQuestions && (
                 <div className='questions'>
                   {
-                    personalInformation?.personalQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase()).map(({ question }, id) => (
-                      <div className='question'>
-                        <p>{question}</p>
-                      </div>
-                    ))
+                    personalInformation?.personalQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
+                    .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
+                    )
                   }
                 </div>
               )}
@@ -197,7 +229,8 @@ export default function PersonalInformation(): JSX.Element {
           ))}
         </QuestionTypes>
 
-        <AdditionalQuestions props={values} />
+        <AdditionalQuestions props={values} formType={'personal information'} />
+
       </Form>
     </Wrapper>
   )
@@ -208,7 +241,7 @@ const QuestionTypes = styled.div`
 
   .question {
     display: flex;
-    justify-content: space-between;
+    gap: 0.3rem;
     align-items: center;
     font-family: PoppinsSemiBold;
     margin-bottom: 0.5rem;
@@ -228,6 +261,11 @@ const Wrapper = styled.div`
    width: 29vw;
    min-width: 23rem;
    border-radius: 1rem;
+
+   @media ${device.mobileM} {
+    min-width: auto;
+    width: 100%;
+    }
 `;
 
 const Header = styled.div`
@@ -297,6 +335,20 @@ const Form = styled.div`
 
     .flex {
       gap: 0.2rem;
+    }
+
+    button {
+      display: flex;
+      align-self: flex-end;
+      outline: none;
+      border: none;
+      height: 1.6rem;
+      padding-inline: 0.5rem;
+      color: white;
+      align-items: center;
+      justify-content: center;
+      background: #087b2f;
+      margin-block: 1rem;
     }
    }
 `;

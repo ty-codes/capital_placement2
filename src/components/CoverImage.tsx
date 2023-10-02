@@ -2,53 +2,99 @@ import styled from "styled-components";
 import Dropzone from 'react-dropzone';
 import { useState } from "react";
 import { UploadIcon } from "assets/svg";
+import { storage } from '../firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { useAppContext } from "contexts/AppContext";
+import { AppContextType } from "../@types/app";
+import { device } from "constants/index";
 
 
 export default function CoverImage(): JSX.Element {
   const [error, setError] = useState<string>('');
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [progresspercent, setProgresspercent] = useState(0);
+
+  const {setImageUri} = useAppContext() as AppContextType;
+
+  const handleSubmit = (files: any) => {
+    console.log(files)
+    const file = files[0];
+
+    if (!file) return;
+
+    const storageRef = ref(storage, `files/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on("state_changed",
+      (snapshot) => {
+        const progress =
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setProgresspercent(progress);
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImgUrl(downloadURL)
+        });
+      }
+    );
+  }
+
+  if(imgUrl) {
+    console.log(imgUrl, progresspercent);
+    setImageUri && setImageUri(imgUrl);
+  }
 
   return (
     <Wrapper>
       <Header>
         <h3>Upload cover image</h3>
       </Header>
-      <Form>
-        <Dropzone onDrop={files => console.log(files)}
-          onDragOver={() => {
-            var element = document.getElementById(`dropzone`)
-            if (element) {
-              element.classList.add("drag");
-            }
-          }}
-          onDragLeave={() => {
-            var element = document.getElementById(`dropzone`)
-            if (element) {
-              element.classList.remove("drag");
-            }
-          }}
-          onDropAccepted={() => {
-            var element = document.getElementById(`dropzone`)
-            if (element) {
-              element.classList.remove("drag");
-            }
-          }}
-          onDropRejected={() => {
-            setError("Something went wrong. Try again")
-          }}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <div className="zone-wrapper" >
-              <div id="dropzone" className="dropzone" {...getRootProps()}>
-                <input {...getInputProps()} />
-                <UploadIcon />
-                <p>Upload cover image</p>
-                <p className="recommendation t-sm">16:9 ratio is recommended. Max image size is 1mb</p>
-              </div>
-              {error && <p className='error-msg'>{error}</p>}
-            </div>
-          )}
-        </Dropzone>
-      </Form>
+      {imgUrl 
+      ? <img src={imgUrl} alt='uploaded file' className="cover-image" height={200} />
+        : <>
+          <Form>
+            <Dropzone onDrop={(files) => { handleSubmit(files) }}
+              onDragOver={() => {
+                var element = document.getElementById(`dropzone`)
+                if (element) {
+                  element.classList.add("drag");
+                }
+              }}
+              onDragLeave={() => {
+                var element = document.getElementById(`dropzone`)
+                if (element) {
+                  element.classList.remove("drag");
+                }
+              }}
+              onDropAccepted={() => {
+                var element = document.getElementById(`dropzone`)
+                if (element) {
+                  element.classList.remove("drag");
+                }
+              }}
+              onDropRejected={() => {
+                setError("Something went wrong. Try again")
+              }}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <div className="zone-wrapper" >
+                  <div id="dropzone" className="dropzone" {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <UploadIcon />
+                    <p>Upload cover image</p>
+                    <p className="recommendation t-sm">16:9 ratio is recommended. Max image size is 1mb</p>
+                  </div>
+                  {error && <p className='input-error red t-sm'>{error}</p>}
+                </div>
+              )}
+
+            </Dropzone>
+          </Form>
+        </>
+      }
     </Wrapper>
   )
 };
@@ -59,6 +105,17 @@ const Wrapper = styled.div`
    width: 29vw;
    min-width: 23rem;
    border-radius: 1rem;
+
+   @media ${device.mobileM} {
+    min-width: auto;
+    width: 100%;
+    }
+
+   .cover-image {
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+   }
 `;
 
 const Header = styled.div`

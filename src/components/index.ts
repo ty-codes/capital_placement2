@@ -19,6 +19,16 @@ import Date from './Date';
 import FileUpload from './FileUpload';
 import ShortAnswer from './ShortAnswer';
 import Video from './Video';
+import MultipleChoiceFilled from './MultipleChoiceFilled';
+import YesNoFilled from './YesNoFilled';
+import DropdownFilled from './DropdownFilled';
+import VideoFilled from './VideoFilled';
+import SubmitButton from './SubmitButton';
+import CoverImageFilled from './CoverImageFilled';
+import PersonalInformationFilled from './PersonalInformationFilled';
+import ProfileFilled from './ProfileFilled';
+import AdditionalQuestionsFilled from './AdditionalQuestionsFilled';
+import ParagraphEdit from './ParagraphEdit';
 
 export {
   SideNavbar,
@@ -41,5 +51,15 @@ export {
   Date,
   FileUpload,
   ShortAnswer,
-  Video
+  Video,
+  MultipleChoiceFilled,
+  DropdownFilled,
+  VideoFilled,
+  YesNoFilled,
+  SubmitButton,
+  CoverImageFilled,
+  PersonalInformationFilled,
+  ProfileFilled,
+  AdditionalQuestionsFilled,
+  ParagraphEdit
 }

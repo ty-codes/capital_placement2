@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useMediaQuery } from "react-responsive";
-import { NavLink, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import { device } from "../constants";
 import {
   FileIcon,
@@ -11,12 +10,6 @@ import {
 import styled from "styled-components";
 
 const SideNavbar = ({ isSideNavOpen, setIsSideNavOpen }) => {
-  const location = useLocation();
-  let currentPath =
-    location.pathname === "/" || !location.pathname
-      ? "dashboard"
-      : location.pathname.split("/")[1];
-  const [activeTab, setActiveTab] = useState(currentPath);
   const ref = useRef(null);
   const isSmallDevice = useMediaQuery({ maxWidth: 768 });
 

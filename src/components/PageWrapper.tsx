@@ -44,6 +44,7 @@ const Wrapper = styled.div<IProps>`
  
 	@media ${device.isSmallDevice} {
 		padding-inline: 0.65rem;
+		margin-top: 7rem;
 	}
 
 	@media ${device.tablet} {

@@ -6,13 +6,15 @@ import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IForm } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
+import uuid from 'react-uuid';
 
 export default function YesNo({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
   const initialValues = {
     question: '',
     type: 'yes/no',
-    disqualify: false
+    disqualify: false,
+    id: uuid()
   };
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),

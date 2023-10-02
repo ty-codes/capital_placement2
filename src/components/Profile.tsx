@@ -1,13 +1,17 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { FileIcon, LikeIcon } from 'assets/svg';
+import { EditIcon } from 'assets/svg';
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 import { AdditionalQuestions } from './AdditionalQuestions';
 import { useAppContext } from 'contexts/AppContext';
-import { AppContextType } from '../@types/app';
+import { AppContextType, IQuestion } from '../@types/app';
+import MultipleChoiceFilled from './MultipleChoiceFilled';
+import DropdownFilled from './DropdownFilled';
+import YesNoFilled from './YesNoFilled';
+import VideoFilled from './VideoFilled';
+import { device } from 'constants/index';
 
 export default function Profile(): JSX.Element {
   const initialValues = {
@@ -25,52 +29,43 @@ export default function Profile(): JSX.Element {
     },
   };
 
+  
+
+  const { profile, profileTypes, setProfile } = useAppContext() as AppContextType;
+
   const { values, handleSubmit, handleChange, handleBlur, errors } = useFormik({
     initialValues,
     onSubmit: values => {
-      console.log(values);
-      // navigate("/");
+      setProfile && setProfile({...values, profileQuestions: []})
     },
   });
-
-  const { profile, profileTypes } = useAppContext() as AppContextType;
-
-  // const ChooseFilledForm = ({ currentType, props, formType }: { currentType: string, props?: IForm, formType?: string }): JSX.Element => {
-  //   const type = currentType;
   
-  //   if (type === "Paragraph") {
-  //     return <></>
-  //   } else if (type === "Number") {
-  //     return <></>
-  //   } else if (type === "Short Answer") {
-  //     return <></>
-  //   } else if (type === "Yes/No") {
-  //     return <YesNo props={props} formType={formType} />
-  //   } else if (type === "Dropdown") {
-  //     return <Dropdown props={props} formType={formType} />
-  //   } else if (type === "Date") {
-  //     return <></>
-  //   } else if (type === "File Upload") {
-  //     return <></>
-  //   } else if (type === "Multiple Choice") {
-  //     return <MultipleChoice props={props} formType={formType} />
-  //   } else if (type === "Video") {
-  //     return <Video props={props} formType={formType} />
-  //   } else {
-  //     return <></>
-  //   }
-  // };
+  const ChooseFilledForm = ({ currentType, data }: { currentType: string | undefined, data?: IQuestion}): JSX.Element => {
+    const type:string | undefined = currentType;
+  
+    if (type === "yes/no") {
+      return <YesNoFilled data={data} type={type} />
+    } else if (type === "dropdown") {
+      return <DropdownFilled data={data} type={type} />
+    } else if (type === "multiple choice") {
+      return <MultipleChoiceFilled data={data} type={type} />
+    }  else if (type === "video") {
+      return <VideoFilled data={data} type={type} />
+    } else {
+      return <></>
+    }
+  };
 
-  const Question = ({ question, id }: { question: string | undefined, id: number }):JSX.Element => {
+  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }):JSX.Element => {
     const [show, setShow] = useState(false);
-    console.log(profile)
-    console.log(show)
+    const filteredQuestion = profile?.profileQuestions?.filter(question => question.id === id)
+
     return <>
-      <div className='question' key={`question-${id}`}>
+      <div className='question' key={`question-${key}`}>
         <p>{question}</p>
-        <FileIcon className='cursor-pointer' onClick={() => setShow(!show)} />
+        <EditIcon className='cursor-pointer' onClick={() => {setShow(!show)}} />
       </div>
-      {show && <p>hello</p>}
+      {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]}  />}
     </>
   }
 
@@ -164,10 +159,13 @@ export default function Profile(): JSX.Element {
               </div>
             </div>
           </div>
+
+          {profileTypes && profileTypes?.length < 1 && <button type="submit">Save</button>}
+
         </form>
 
         <QuestionTypes>
-          {profileTypes?.map((question: string, id: number) => (
+          {profileTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
             <>
               <p className='question-type capitalize text_light'>
                 {question}
@@ -176,7 +174,8 @@ export default function Profile(): JSX.Element {
               {profile?.profileQuestions && (
                 <div className='questions'>
                   {
-                    profile?.profileQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase()).map(({ question }, id) => <Question question={question} id={id} />
+                    profile?.profileQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
+                    .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
                     )
                   }
                 </div>
@@ -196,7 +195,7 @@ const QuestionTypes = styled.div`
 
   .question {
     display: flex;
-    justify-content: space-between;
+    gap: 0.3rem;
     align-items: center;
     font-family: PoppinsSemiBold;
     margin-bottom: 0.5rem;
@@ -216,6 +215,11 @@ const Wrapper = styled.div`
   width: 29vw;
   min-width: 23rem;
   border-radius: 1rem;
+
+  @media ${device.mobileM} {
+    min-width: auto;
+    width: 100%;
+    }
 `;
 
 const Header = styled.div`
@@ -286,6 +290,20 @@ const Form = styled.div`
 
     .flex {
       gap: 0.2rem;
+    }
+
+    button {
+      display: flex;
+    align-self: flex-end;
+    outline: none;
+    border: none;
+    height: 1.6rem;
+    padding-inline: 0.5rem;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    background: #087b2f;
+    margin-block: 1rem;
     }
   }
 `;

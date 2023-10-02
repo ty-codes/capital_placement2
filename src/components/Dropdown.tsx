@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { Field, FieldArray, useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'react-toggle/style.css';
-import { DeleteIcon, FileIcon, LikeIcon } from 'assets/svg';
+import { DeleteIcon, ListIcon, PlusIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IForm } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
+import uuid from 'react-uuid';
 
 
 export default function Dropdown({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
@@ -18,7 +19,8 @@ export default function Dropdown({ props, formType }: { props?: IForm, formType?
     choices: [''],
     question: '',
     type: 'dropdown',
-    other: false
+    other: false,
+    id: uuid(),
   };
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),
@@ -29,8 +31,8 @@ export default function Dropdown({ props, formType }: { props?: IForm, formType?
     validationSchema,
     onSubmit: values => {
       setShow(false);
-      const { question, type, other } = values;
-      values = { question, type, choices, other };
+      const { question, type, other, id } = values;
+      values = { question, type, choices, other, id };
 
       if (formType && formType === 'profile') {
         setProfileTypes && setProfileTypes(current => [...current, values?.type?.toLowerCase()])
@@ -92,7 +94,7 @@ export default function Dropdown({ props, formType }: { props?: IForm, formType?
               {choices?.map((choice: string, id: number) => (
                 <>
                   <div className="choice-wrapper flex">
-                    <FileIcon />
+                    <ListIcon />
                     <div className='w-100'>
                       <p className="t-sm">Choice</p>
                       <input type="text" className='t-sm' defaultValue={choice} readOnly />
@@ -103,7 +105,7 @@ export default function Dropdown({ props, formType }: { props?: IForm, formType?
               {
                 <>
                   <div className="choice-wrapper flex">
-                    <FileIcon />
+                    <ListIcon />
                     <div className='w-100'>
                       <p className="t-sm">Choice</p>
                       <input
@@ -114,7 +116,7 @@ export default function Dropdown({ props, formType }: { props?: IForm, formType?
                       />
                     </div>
 
-                    <LikeIcon
+                    <PlusIcon
                       onClick={() => {
                         setChoices([...choices, choice]);
                         setChoice('');

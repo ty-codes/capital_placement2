@@ -6,12 +6,14 @@ import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IForm } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
+import uuid from 'react-uuid';
 
 export default function ShortAnswer({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
   const initialValues = {
+    id: uuid(),
     question: '',
-    type: 'short answer',
+    type: 'short answer'
   };
   const validationSchema = Yup.object().shape({
     question: Yup.string().required('Please enter question'),

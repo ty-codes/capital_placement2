@@ -6,6 +6,7 @@ import { DeleteIcon } from 'assets/svg';
 import { useState } from 'react';
 import { AppContextType, IForm } from '../@types/app';
 import { useAppContext } from 'contexts/AppContext';
+import uuid from 'react-uuid';
 
 export default function Video({ props, formType }: { props?: IForm, formType?: string }): JSX.Element {
   const [show, setShow] = useState<boolean>(true);
@@ -16,7 +17,8 @@ export default function Video({ props, formType }: { props?: IForm, formType?: s
     type: 'video',
     additionalInformation: '',
     maxTime: 0,
-    timeType: ''
+    timeType: '',
+    id: uuid()
   };
 
   const validationSchema = Yup.object().shape({
