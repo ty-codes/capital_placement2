@@ -51,17 +51,20 @@ export default function ProfileFilled({ data }: { data: IForm }): JSX.Element {
         }
     };
 
-    const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
+    const Question = ({ question, id, key, type }: { type: string | undefined, question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
         const [show, setShow] = useState(false);
         const filteredQuestion = data?.profileQuestions?.filter(question => question.id === id)
 
-        return <>
+        return (<>
+            <p className='question-type t-sm capitalize text_light'>
+                {type}
+            </p>
             <div className='question' key={`question-${key}`}>
                 <p>{question}</p>
                 <EditIcon className='cursor-pointer' onClick={() => { setShow(!show) }} />
             </div>
             {show && filteredQuestion && <ChooseFilledForm currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]} />}
-        </>
+        </>)
     }
 
     const questionTypes: string[] = [];
@@ -161,23 +164,15 @@ export default function ProfileFilled({ data }: { data: IForm }): JSX.Element {
                 </form>
 
                 <QuestionTypes>
-                    {questionTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
-                        <span key={`type-${id}`}>
-                            <p className='question-type capitalize text_light'>
-                                {question}
-                            </p>
 
-                            {data?.profileQuestions && (
-                                <div className='questions'>
-                                    {
-                                        data?.profileQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
-                                            .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
-                                            )
-                                    }
-                                </div>
-                            )}
-                        </span>
-                    ))}
+                    {data?.profileQuestions && (
+                        <div className='questions'>
+                            {
+                                data?.profileQuestions?.map(({ question, id, type }, key) => <Question type={type} question={question} key={key} id={id} />
+                                )
+                            }
+                        </div>
+                    )}
                 </QuestionTypes>
             </Form>
         </Wrapper>
@@ -194,7 +189,7 @@ const QuestionTypes = styled.div`
     font-family: PoppinsSemiBold;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid rgba(151, 151, 151, 0.7);
-    padding-block: 0.7rem;
+    padding-bottom: 0.7rem;
 
     svg {
       width: 0.8rem;

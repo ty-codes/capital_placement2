@@ -64,7 +64,7 @@ export default function PersonalInformation(): JSX.Element {
     }
   };
 
-  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
+  const Question = ({ question, id, key, type }: { type: string | undefined, question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
     const [show, setShow] = useState(false);
     const filteredQuestion = personalInformation?.personalQuestions?.filter(question => question.id === id)
     const [showQuestion, setShowQuestion] = useState<boolean>(true);
@@ -73,6 +73,9 @@ export default function PersonalInformation(): JSX.Element {
       {
         showQuestion &&
         <>
+          <p className='question-type t-sm capitalize text_light'>
+            {type}
+          </p>
           <div className='question' key={`question-${key}`}>
             <p>{question}</p>
             <EditIcon className='cursor-pointer' onClick={() => { setShow(!show) }} />
@@ -222,22 +225,16 @@ export default function PersonalInformation(): JSX.Element {
         </form>
 
         <QuestionTypes>
-          {personalTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
-            <>
-              <p className='question-type capitalize text_light'>
-                {question}
-              </p>
-
-              {personalInformation?.personalQuestions && (
-                <div className='questions'>
-                  {
-                    personalInformation?.personalQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
-                      .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
-                      )
-                  }
-                </div>
-              )}
-            </>))}
+          <>
+            {personalInformation?.personalQuestions && (
+              <div className='questions'>
+                {
+                  personalInformation?.personalQuestions?.map(({ question, id, type }, key) => <Question type={type} question={question} key={key} id={id} />
+                  )
+                }
+              </div>
+            )}
+          </>
         </QuestionTypes>
 
         <AdditionalQuestions props={values} formType={'personal information'} />
@@ -257,7 +254,7 @@ const QuestionTypes = styled.div`
     font-family: PoppinsSemiBold;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid rgba(151, 151, 151, 0.7);
-    padding-block: 0.7rem;
+    padding-bottom: 0.7rem;
 
     svg {
       width: 0.8rem;

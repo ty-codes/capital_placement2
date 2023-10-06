@@ -56,7 +56,7 @@ interface IForm {
 
 
 export default function AdditionalQuestionsWrapper(): JSX.Element {
-  const { customisedTypes, customizedQuestions } = useAppContext() as AppContextType;
+  const { customizedQuestions } = useAppContext() as AppContextType;
 
   const initialValues = {
     firstName: '',
@@ -130,18 +130,23 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
     }
   };
 
-  const Question = ({ question, id, key }: { question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
+  const Question = ({ question, id, key, type }: { type: string | undefined, question: string | undefined, id: string | undefined, key: number }): JSX.Element => {
     const [show, setShow] = useState(false);
     const filteredQuestion = customizedQuestions?.filter(question => question.id === id)
     const [, setShowQuestion] = useState<boolean>(true);
 
-    return <>
+    return (
+    <>
+      <p className='question-type t-sm capitalize text_light'>
+        {type}
+      </p>
       <div className='question' key={`question-${key}`}>
         <p>{question}</p>
         <EditIcon className='cursor-pointer' onClick={() => { setShow(!show) }} />
       </div>
       {show && filteredQuestion && <ChooseEditForm setShowQuestion={setShowQuestion} currentType={filteredQuestion[0]?.type} data={filteredQuestion[0]} />}
     </>
+    )
   }
 
   return (
@@ -153,22 +158,15 @@ export default function AdditionalQuestionsWrapper(): JSX.Element {
 
       <Form>
         <QuestionTypes>
-          {customisedTypes?.filter((value, idx, array) => array.indexOf(value) === idx)?.map((question: string, id: number) => (
-            <>
-              <p className='question-type capitalize text_light'>
-                {question}
-              </p>
 
-              {customizedQuestions && (
-                <div className='questions'>
-                  {
-                    customizedQuestions?.filter(el => el.type?.toLowerCase() === question.toLowerCase())
-                      .map(({ question, id }, key) => <Question question={question} key={key} id={id} />
-                      )
-                  }
-                </div>
-              )}
-            </>))}
+          {customizedQuestions && (
+            <div className='questions'>
+              {
+                customizedQuestions?.map(({ question, id, type }, key) => <Question type={type} question={question} key={key} id={id} />
+                )
+              }
+            </div>
+          )}
         </QuestionTypes>
         <AdditionalQuestions />
       </Form>
@@ -218,7 +216,7 @@ const QuestionTypes = styled.div`
     font-family: PoppinsSemiBold;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid rgba(151, 151, 151, 0.7);
-    padding-block: 0.7rem;
+    padding-bottom: 0.7rem;
 
     svg {
       width: 0.8rem;
