@@ -28,6 +28,7 @@ export default function ShortAnswer({ props, formType }: { props?: IForm, formTy
     initialValues,
     validationSchema,
     onSubmit: values => {
+      setShow(false)
       if (formType && formType === 'profile') {
         setShow(false);
 
