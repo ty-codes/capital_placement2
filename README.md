@@ -25,7 +25,7 @@ Users can:
 - Backend - _Firebase_
 
 # Design
-- [Figma]([https://capitalplacement.netlify.app](https://www.figma.com/file/2AEUzsQeLSF0uwI5vjYa6u/FE-Task-(Community)-(Copy)?type=design&t=X1E6JWncXtuxYFMP-6))
+- [Figma](https://www.figma.com/file/2AEUzsQeLSF0uwI5vjYa6u/FE-Task-(Community)-(Copy)?type=design&t=X1E6JWncXtuxYFMP-6)
 
 # Hosted on
 - [Netlify](https://capital-placement.netlify.app)
